@@ -1,6 +1,5 @@
 package ui;
 
-import db.MongoDBConnection;
 import models.Client;
 
 import javax.swing.*;
@@ -9,11 +8,12 @@ import java.awt.event.ActionListener;
 
 public class ClientInterface extends JFrame {
     private JTextField prenomField, adresseField, telephoneField, codePostalField;
+    private Client client;
 
     public ClientInterface() {
         super("Interface Client");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(300, 200);
+        setSize(500, 400);
         setLocationRelativeTo(null);
 
         prenomField = new JTextField(20);
@@ -45,6 +45,15 @@ public class ClientInterface extends JFrame {
         });
         panel.add(addButton);
 
+        JButton passerCommandeButton = new JButton("Passer une commande");
+        passerCommandeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                passerCommande();
+            }
+        });
+        panel.add(passerCommandeButton);
+
         getContentPane().add(panel);
         setVisible(true);
     }
@@ -55,17 +64,26 @@ public class ClientInterface extends JFrame {
         String telephone = telephoneField.getText();
         String codePostal = codePostalField.getText();
 
-        // Création du client
-        Client client = new Client(prenom, adresse, telephone, codePostal);
+        if (prenom.isEmpty() || adresse.isEmpty() || telephone.isEmpty() || codePostal.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs.");
+            return;
+        }
         
-        // Enregistrement du client dans la base de données MongoDB
-        MongoDBConnection.saveClient(client);
+        client = new Client(prenom, adresse, telephone, codePostal);
 
-        // Affichage d'un message de succès
-        JOptionPane.showMessageDialog(null, "Client ajouté avec succès !");
+        JOptionPane.showMessageDialog(this, "Client ajouté avec succès !");
+    }
+
+    private void passerCommande() {
+        if (client != null) {
+            CommandeInterface commandeInterface = new CommandeInterface(client);
+            commandeInterface.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Veuillez ajouter un client d'abord.");
+        }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(ClientInterface::new);
+        SwingUtilities.invokeLater(() -> new ClientInterface());
     }
 }

@@ -5,15 +5,16 @@ public class Commande {
     private int num;
     private Date date;
     private String adresseLivraison;
+    private Client client;
 
-    // Constructeur
-    public Commande(int num, Date date, String adresseLivraison) {
+    public Commande(int num, Date date, String adresseLivraison, Client client) {
         this.num = num;
         this.date = date;
         this.adresseLivraison = adresseLivraison;
+        this.client = client;
     }
 
-    // Getters and setters
+
     public int getNum() {
         return num;
     }
@@ -37,5 +38,12 @@ public class Commande {
     public void setAdresseLivraison(String adresseLivraison) {
         this.adresseLivraison = adresseLivraison;
     }
-}
 
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+}
